@@ -30,7 +30,6 @@ describe('/auth',()=>{
 
         expect(res.body.login).toEqual(loginNewUser)
         expect(res.body.email).toEqual(emailNewUser)
-        //expect(res.body.id).toEqual(idNewUser)
     })
 
 
