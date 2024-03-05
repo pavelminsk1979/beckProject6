@@ -6,7 +6,7 @@ import {loginAndEmailValidationAuth} from "../middlewares/authMiddleware/loginAn
 import {passwordValidationAuth} from "../middlewares/authMiddleware/passwordValidationAuth";
 import {AuthModel} from "../allTypes/authTypes";
 import {authService} from "../servisces/auth-service";
-
+import {tokenJwtServise} from "../servisces/token-jwt-service";
 
 
 export const authRoute = Router({})
@@ -14,21 +14,31 @@ export const authRoute = Router({})
 const postValidationAuth = () => [loginAndEmailValidationAuth, passwordValidationAuth]
 
 
-authRoute.post('/login', postValidationAuth(), errorValidationBlogs, async (req: RequestWithBody<AuthModel>, res: Response)=> {
-debugger
-    const isExistUser = await authService.findUserInDataBase(req.body)
+authRoute.post('/login', postValidationAuth(), errorValidationBlogs, async (req: RequestWithBody<AuthModel>, res: Response) => {
+    try {
 
-    if (isExistUser) {
-        return res.sendStatus(STATUS_CODE.NO_CONTENT_204)
+        const idUser = await authService.findUserInDataBase(req.body)
 
-    } else {
-       return  res.sendStatus(STATUS_CODE.UNAUTHORIZED_401)
+        if (idUser) {
+
+            const token = await tokenJwtServise.createTokenJwt(idUser)
+            const answer = {"accessToken": token}
+
+            res.status(STATUS_CODE.SUCCESS_200).send(answer)
+
+        } else {
+            res.sendStatus(STATUS_CODE.UNAUTHORIZED_401)
+        }
+
+    } catch (error) {
+        console.log('auth-routes.ts /login' + error)
     }
-
 })
 
 
-
+/*authRoute.get('/me',async (req: Response, res: Response) => {
+const result = await tokenJwtServise.getUserIdByToken(req)
+})*/
 
 
 

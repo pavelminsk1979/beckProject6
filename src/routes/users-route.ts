@@ -1,12 +1,6 @@
 import {Response, Router} from "express";
 import {RequestWithBody} from "../allTypes/RequestWithBody";
-import {
-    CreateUserModel,
-    IdUserModel,
-    OutputUser,
-    PaginationWithOutputUser,
-    QueryUsersInputModal
-} from "../allTypes/userTypes";
+import {CreateUserModel, IdUserModel, QueryUsersInputModal} from "../allTypes/userTypes";
 import {authMiddleware} from "../middlewares/authMiddleware/authMiddleware";
 import {loginValidationUsers} from "../middlewares/usersMiddlewares/loginValidationUsers";
 import {passwordValidationUsers} from "../middlewares/usersMiddlewares/passwordValidationUsers";

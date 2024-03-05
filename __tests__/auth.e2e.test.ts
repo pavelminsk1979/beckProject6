@@ -39,7 +39,11 @@ describe('/auth',()=>{
             .post('/auth/login')
             .send({ loginOrEmail: loginNewUser,
                 password: passwordNewUser})
-            .expect(STATUS_CODE.NO_CONTENT_204)
+            .expect(STATUS_CODE.SUCCESS_200)
+
+            console.log(res.body.accessToken)
+
+        expect(res.body.accessToken).toBeTruthy()
     })
 
 })
