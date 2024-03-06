@@ -8,7 +8,7 @@ import {RequestWithParams} from "../allTypes/RequestWithParams";
 import {IdStringGetAndDeleteModel} from "../models/IdStringGetAndDeleteModel";
 import {RequestWithBody} from "../allTypes/RequestWithBody";
 import {CreateAndUpdateBlogModel} from "../models/CreateAndUpdateBlogModel";
-import {STATUS_CODE} from "../constant-status-code";
+import {STATUS_CODE} from "../common/constant-status-code";
 import {RequestWithParamsWithBody} from "../allTypes/RequestWithParamsWithBody";
 import {blogsSevrice} from "../servisces/blogs-service";
 import {blogQueryRepository} from "../repositories/blog-query-repository";

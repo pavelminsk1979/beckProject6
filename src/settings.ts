@@ -4,7 +4,7 @@ import {blogsRoute} from "./routes/blogs-route";
 import {postsRoute} from "./routes/posts-route";
 import {DB} from "./db/db";
 import {blogsCollection, postsCollection, usersCollection} from "./db/mongoDb";
-import {STATUS_CODE} from "./constant-status-code";
+import {STATUS_CODE} from "./common/constant-status-code";
 import {usersRoute} from "./routes/users-route";
 import {authRoute} from "./routes/auth-route";
 

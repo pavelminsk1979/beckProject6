@@ -1,6 +1,6 @@
 import {agent as supertest} from "supertest";
 import {app} from "../src/settings";
-import {STATUS_CODE} from "../src/constant-status-code";
+import {STATUS_CODE} from "../src/common/constant-status-code";
 
 
 const  req = supertest(app)

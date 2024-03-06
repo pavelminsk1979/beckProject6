@@ -52,3 +52,10 @@ export type QueryParamsUsers = {
 export type IdUserModel = {
     id : string
 }
+
+
+export type OutputUserMeRequest = {
+    userId: string,
+    login: string,
+    email: string,
+}

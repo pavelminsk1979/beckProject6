@@ -1,5 +1,5 @@
 import { Response, Router} from "express";
-import {STATUS_CODE} from "../constant-status-code";
+import {STATUS_CODE} from "../common/constant-status-code";
 import {RequestWithParams} from "../allTypes/RequestWithParams";
 import {IdStringGetAndDeleteModel} from "../models/IdStringGetAndDeleteModel";
 import {RequestWithBody} from "../allTypes/RequestWithBody";

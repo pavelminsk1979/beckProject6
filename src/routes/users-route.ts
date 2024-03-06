@@ -7,7 +7,7 @@ import {passwordValidationUsers} from "../middlewares/usersMiddlewares/passwordV
 import {emailValidationUsers} from "../middlewares/usersMiddlewares/emailValidationUsers";
 import {errorValidationBlogs} from "../middlewares/blogsMiddelwares/errorValidationBlogs";
 import {usersService} from "../servisces/users-service";
-import {STATUS_CODE} from "../constant-status-code";
+import {STATUS_CODE} from "../common/constant-status-code";
 import {RequestWithQuery} from "../allTypes/RequestWithQuery";
 import {userQueryRepository} from "../repositories/users/user-query-repository";
 import {RequestWithParams} from "../allTypes/RequestWithParams";

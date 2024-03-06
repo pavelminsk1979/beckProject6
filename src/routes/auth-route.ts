@@ -1,12 +1,14 @@
 import {Response, Router} from "express";
 import {RequestWithBody} from "../allTypes/RequestWithBody";
 import {errorValidationBlogs} from "../middlewares/blogsMiddelwares/errorValidationBlogs";
-import {STATUS_CODE} from "../constant-status-code";
+import {STATUS_CODE} from "../common/constant-status-code";
 import {loginAndEmailValidationAuth} from "../middlewares/authMiddleware/loginAndEmailValidationAuth";
 import {passwordValidationAuth} from "../middlewares/authMiddleware/passwordValidationAuth";
 import {AuthModel} from "../allTypes/authTypes";
 import {authService} from "../servisces/auth-service";
 import {tokenJwtServise} from "../servisces/token-jwt-service";
+import {authTokenMiddleware} from "../middlewares/authMiddleware/authTokenMiddleware";
+import {userMaperForMeRequest} from "../mapers/userMaperForMeRequest";
 
 
 export const authRoute = Router({})
@@ -36,9 +38,16 @@ authRoute.post('/login', postValidationAuth(), errorValidationBlogs, async (req:
 })
 
 
-/*authRoute.get('/me',async (req: Response, res: Response) => {
-const result = await tokenJwtServise.getUserIdByToken(req)
-})*/
+authRoute.get('/me', authTokenMiddleware,  (req: any, res: Response) => {
+    try {
+
+        const userModel = userMaperForMeRequest(req.userIdLoginEmail)
+         res.status(STATUS_CODE.SUCCESS_200).send(userModel)
+
+    } catch (error) {
+        console.log(' FIlE auth-routes.ts /me' + error)
+    }
+})
 
 
 

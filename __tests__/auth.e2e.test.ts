@@ -1,6 +1,6 @@
 import {agent as supertest} from "supertest";
 import {app} from "../src/settings";
-import {STATUS_CODE} from "../src/constant-status-code";
+import {STATUS_CODE} from "../src/common/constant-status-code";
 
 
 const  req = supertest(app)
@@ -33,7 +33,7 @@ describe('/auth',()=>{
     })
 
 
-
+let jwtToken=''
     it("input correct login and password and sign in (ok)",async ()=>{
         const res =await req
             .post('/auth/login')
@@ -42,8 +42,19 @@ describe('/auth',()=>{
             .expect(STATUS_CODE.SUCCESS_200)
 
             console.log(res.body.accessToken)
+        jwtToken=res.body.accessToken
 
         expect(res.body.accessToken).toBeTruthy()
+    })
+
+
+
+    it("me  request  (ok)",async ()=>{
+        const res =await req
+            .get('/auth/me')
+            .set('Authorization', `Bearer ${jwtToken}`)
+            .expect(STATUS_CODE.SUCCESS_200)
+
     })
 
 })

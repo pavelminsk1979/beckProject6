@@ -1,5 +1,5 @@
 import {NextFunction,Response,Request} from "express";
-import {STATUS_CODE} from "../../constant-status-code";
+import {STATUS_CODE} from "../../common/constant-status-code";
 
 
 

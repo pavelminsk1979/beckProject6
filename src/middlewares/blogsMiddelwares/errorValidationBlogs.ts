@@ -1,6 +1,6 @@
 import {NextFunction, Request, Response} from "express";
 import {validationResult, ValidationError} from "express-validator";
-import {STATUS_CODE} from "../../constant-status-code";
+import {STATUS_CODE} from "../../common/constant-status-code";
 
 
 export const errorValidationBlogs = (req: Request, res: Response, next: NextFunction) => {

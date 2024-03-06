@@ -12,7 +12,7 @@ import {publicationDateValidation} from "../middlewares/videoMiddlewares/publica
 import {availableResolutionsValidation} from "../middlewares/videoMiddlewares/availableResolutionsValidation";
 import {RequestWithParams} from "../allTypes/RequestWithParams";
 import {RequestWithBody} from "../allTypes/RequestWithBody";
-import {STATUS_CODE} from "../constant-status-code";
+import {STATUS_CODE} from "../common/constant-status-code";
 
 
 
