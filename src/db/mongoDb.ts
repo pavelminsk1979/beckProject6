@@ -3,6 +3,7 @@ import dotenv from 'dotenv'
 import {Blog} from "../allTypes/blogTypes";
 import {Post} from "../allTypes/postTypes";
 import {User} from "../allTypes/userTypes";
+import {Comment} from "../allTypes/commentTypes";
 
 export const port = 3000
 
@@ -25,6 +26,8 @@ export const postsCollection=db.collection<Post>('posts')
 export const blogsCollection=db.collection<Blog>('blogs')
 
 export const usersCollection=db.collection<User>('users')
+
+export const commentsCollection=db.collection<Comment>('comments')
 
 export async function runDb(){
     try {

@@ -2,6 +2,10 @@ import {Post} from "../allTypes/postTypes";
 import {CreateAndUpdatePostModel} from "../models/CreateAndUpdatePostModel";
 import {postsRepository} from "../repositories/posts-repository-mongoDB";
 import {blogQueryRepository} from "../repositories/blog-query-repository";
+import {postQueryRepository} from "../repositories/post-query-repository";
+import {Comment, CommentatorInfo} from "../allTypes/commentTypes";
+import {commentsRepository} from "../repositories/comments/comments-repository";
+import {commentsQueryRepository} from "../repositories/comments/comments-query-repository";
 
 export const postsSevrice = {
 
@@ -56,6 +60,37 @@ export const postsSevrice = {
     async deletePostById(id: string) {
 
         return postsRepository.deletePostById(id)
+    },
+
+
+    async createCommentForPostByPostId(postId: string, content: string, userId: string, userLogin: string) {
+
+        const post = await postQueryRepository.findPostById(postId)
+
+        if (!post) return null
+
+        const commentatorInfo: CommentatorInfo = {
+            userId,
+            userLogin
+        }
+
+        const newCommentForPost: Comment = {
+            content,
+            commentatorInfo,
+            createdAt: new Date().toISOString()
+        }
+
+
+        const result = await commentsRepository.createComment(newCommentForPost)
+
+        const idComment = result.insertedId.toString()
+
+        if(!idComment) return null
+
+        const newComment = await commentsQueryRepository.findCommentById(idComment)
+
+        return newComment
+
     }
 
 }

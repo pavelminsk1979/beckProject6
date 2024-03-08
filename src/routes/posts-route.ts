@@ -15,6 +15,11 @@ import { QueryBlogInputModal} from "../allTypes/postTypes";
 import {postsSevrice} from "../servisces/posts-service";
 import {postQueryRepository} from "../repositories/post-query-repository";
 import {RequestWithQuery} from "../allTypes/RequestWithQuery";
+import {authTokenMiddleware} from "../middlewares/authMiddleware/authTokenMiddleware";
+import {CreateComentPostIdModel} from "../models/CreateComentPostIdModel";
+import {CreateComentBodyModel} from "../models/CreateComentBodyModel";
+import {contentValidationComments} from "../middlewares/commentsMiddleware/contentValidationComments";
+import {userMaperForMeRequest} from "../mapers/userMaperForMeRequest";
 
 
 
@@ -73,6 +78,23 @@ postsRoute.delete('/:id',authMiddleware, async (req: RequestWithParams<IdStringG
     }else {
         res.sendStatus(STATUS_CODE.NOT_FOUND_404)
     }
+})
+
+
+postsRoute.post('/:postId/comments',authTokenMiddleware,contentValidationComments,errorValidationBlogs,async (req: RequestWithParamsWithBody<CreateComentPostIdModel, CreateComentBodyModel>, res: Response)=>{
+
+    try {
+        const newCommentForPost = await postsSevrice.createCommentForPostByPostId(req.params.postId,req.body.content,req.userIdLoginEmail.id,req.userIdLoginEmail.login)
+
+        res.status(STATUS_CODE.CREATED_201).send(newCommentForPost)
+
+    } catch (error) {
+
+        console.log(' FIlE post-routes.ts /me' + error)
+    }
+
+
+
 })
 
 
