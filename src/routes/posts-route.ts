@@ -19,8 +19,7 @@ import {authTokenMiddleware} from "../middlewares/authMiddleware/authTokenMiddle
 import {CreateComentPostIdModel} from "../models/CreateComentPostIdModel";
 import {CreateComentBodyModel} from "../models/CreateComentBodyModel";
 import {contentValidationComments} from "../middlewares/commentsMiddleware/contentValidationComments";
-import {userMaperForMeRequest} from "../mapers/userMaperForMeRequest";
-import {ObjectResult, ResultCode} from "../common/object-result";
+import { ResultCode} from "../common/object-result";
 import {RequestWithParamsWithQuery} from "../allTypes/RequestWithParamsWithQuery";
 import {QueryInputModalGetCommentsForCorrectPost} from "../allTypes/commentTypes";
 import {commentsQueryRepository} from "../repositories/comments/comments-query-repository";
@@ -55,6 +54,7 @@ postsRoute.get('/:id', async (req: RequestWithParams<IdStringGetAndDeleteModel>,
     } else { res.sendStatus(STATUS_CODE.NOT_FOUND_404)}
 
 })
+
 
 postsRoute.post('/',authMiddleware,
     createAndUpdateValidationPosts(),
@@ -125,20 +125,22 @@ postsRoute.get('/:postId/comments',async (req: RequestWithParamsWithQuery<Create
 
     try {
 
+        const post = await postQueryRepository.findPostById(req.params.postId)
+
+        if (!post) {
+            return res.sendStatus(STATUS_CODE.NOT_FOUND_404)
+        }
+
         const comments = await commentsQueryRepository.getCommentsForCorrectPost(req.params.postId,sortData)
 
-        if(comments){
-            res.status(STATUS_CODE.SUCCESS_200).send(comments)
-        } else {
-            res.sendStatus(STATUS_CODE.NOT_FOUND_404)
-        }
+        return res.status(STATUS_CODE.SUCCESS_200).send(comments)
+
 
     }catch (error) {
 
         console.log(' FIlE post-routes.ts get-/:postId/comments' + error)
+        return
     }
-
-
 
 })
 

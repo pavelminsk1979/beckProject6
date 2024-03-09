@@ -7,6 +7,7 @@ import {blogsCollection, commentsCollection, postsCollection, usersCollection} f
 import {STATUS_CODE} from "./common/constant-status-code";
 import {usersRoute} from "./routes/users-route";
 import {authRoute} from "./routes/auth-route";
+import {commentsRoute} from "./routes/comments-route";
 
 
 export const app = express()
@@ -19,6 +20,7 @@ app.use('/blogs', blogsRoute)
 app.use('/posts', postsRoute)
 app.use('/users', usersRoute)
 app.use('/auth', authRoute)
+app.use('/comments',commentsRoute)
 
 
 app.delete('/testing/all-data', async (req: Request, res: Response) => {

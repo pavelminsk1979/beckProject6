@@ -2,9 +2,9 @@ import {commentsCollection, postsCollection} from "../../db/mongoDb";
 import {ObjectId} from "mongodb";
 import {commentMaper} from "../../mapers/commentMaper";
 import {SortDataGetCoomentsForCorrectPost} from "../../allTypes/commentTypes";
-import {postMaper} from "../../mapers/postMaper";
-import {postQueryRepository} from "../post-query-repository";
-import {ResultCode} from "../../common/object-result";
+
+
+
 
 export const commentsQueryRepository = {
 
@@ -19,10 +19,6 @@ export const commentsQueryRepository = {
 
 
     async getCommentsForCorrectPost(postId:string,sortData:SortDataGetCoomentsForCorrectPost){
-
-        const post = await postQueryRepository.findPostById(postId)
-
-        if (!post) return null
 
 
         const {sortBy, sortDirection, pageNumber, pageSize} = sortData

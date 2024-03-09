@@ -139,6 +139,7 @@ let jwtToken=''
         //console.log(res.body)
     })
 
+let commentId=''
 
     it(" create secondNewComment for exist  post",async ()=>{
         const res =await req
@@ -147,6 +148,7 @@ let jwtToken=''
             .send({content:'secondNewComment secondNewComment'})
             .expect(STATUS_CODE.CREATED_201)
         //console.log(res.body)
+        commentId=res.body.id
 
     })
 
@@ -160,6 +162,38 @@ let jwtToken=''
        // console.log(res.body.items)
 
         expect(res.body.items.length).toEqual(2)
+
+    })
+
+
+    it(" get   comment by idComment",async ()=>{
+        const res =await req
+            .get(`/comments/${commentId}`)
+            .expect(STATUS_CODE.SUCCESS_200)
+
+         //console.log(res.body)
+         //console.log(commentId)
+         //console.log(jwtToken)
+
+        expect(res.body.id).toEqual(commentId)
+    })
+
+
+
+    it(" incorrect idComment - get comment",async ()=>{
+        await req
+            .get(`/comments/65ebb65294fd05d7b8c64395`)
+            .expect(STATUS_CODE.NOT_FOUND_404)
+    })
+
+
+    it(" delete  comment by correct idComment",async ()=>{
+        const res =await req
+            .delete(`/comments/${commentId}`)
+            .set('Authorization', `Bearer ${jwtToken}`)
+            .expect(STATUS_CODE.NO_CONTENT_204)
+
+        // console.log(res.body)
 
     })
 
