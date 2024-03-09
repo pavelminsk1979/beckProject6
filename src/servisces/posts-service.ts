@@ -6,6 +6,10 @@ import {postQueryRepository} from "../repositories/post-query-repository";
 import {Comment, CommentatorInfo} from "../allTypes/commentTypes";
 import {commentsRepository} from "../repositories/comments/comments-repository";
 import {commentsQueryRepository} from "../repositories/comments/comments-query-repository";
+import {ResultCode} from "../common/object-result";
+
+
+
 
 export const postsSevrice = {
 
@@ -67,7 +71,11 @@ export const postsSevrice = {
 
         const post = await postQueryRepository.findPostById(postId)
 
-        if (!post) return null
+        if (!post) return {
+            code:ResultCode.NotFound,
+            errorMessage:`Not found postId: ${postId}`,
+            data:null
+        }
 
         const commentatorInfo: CommentatorInfo = {
             userId,
@@ -77,7 +85,8 @@ export const postsSevrice = {
         const newCommentForPost: Comment = {
             content,
             commentatorInfo,
-            createdAt: new Date().toISOString()
+            createdAt: new Date().toISOString(),
+            postId
         }
 
 
@@ -85,12 +94,22 @@ export const postsSevrice = {
 
         const idComment = result.insertedId.toString()
 
-        if(!idComment) return null
+        if(!idComment) return {
+            code:ResultCode.NotFound,
+            errorMessage:`Not found idComment: ${idComment} `,
+            data:null
+        }
 
         const newComment = await commentsQueryRepository.findCommentById(idComment)
 
-        return newComment
-
+        return {
+            code:ResultCode.Success,
+            errorMessage:'',
+            data:newComment
+        }
     }
+
+
+
 
 }

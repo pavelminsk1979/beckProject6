@@ -20,6 +20,10 @@ import {CreateComentPostIdModel} from "../models/CreateComentPostIdModel";
 import {CreateComentBodyModel} from "../models/CreateComentBodyModel";
 import {contentValidationComments} from "../middlewares/commentsMiddleware/contentValidationComments";
 import {userMaperForMeRequest} from "../mapers/userMaperForMeRequest";
+import {ObjectResult, ResultCode} from "../common/object-result";
+import {RequestWithParamsWithQuery} from "../allTypes/RequestWithParamsWithQuery";
+import {QueryInputModalGetCommentsForCorrectPost} from "../allTypes/commentTypes";
+import {commentsQueryRepository} from "../repositories/comments/comments-query-repository";
 
 
 
@@ -86,11 +90,52 @@ postsRoute.post('/:postId/comments',authTokenMiddleware,contentValidationComment
     try {
         const newCommentForPost = await postsSevrice.createCommentForPostByPostId(req.params.postId,req.body.content,req.userIdLoginEmail.id,req.userIdLoginEmail.login)
 
-        res.status(STATUS_CODE.CREATED_201).send(newCommentForPost)
+        if(newCommentForPost.code===ResultCode.NotFound){
+            res.sendStatus(STATUS_CODE.NOT_FOUND_404)
+
+        }
+        if(newCommentForPost.code===ResultCode.Success){
+            res.status(STATUS_CODE.CREATED_201).send(newCommentForPost.data)
+        }
 
     } catch (error) {
 
-        console.log(' FIlE post-routes.ts /me' + error)
+        console.log(' FIlE post-routes.ts post-/:postId/comments' + error)
+    }
+})
+
+
+
+postsRoute.get('/:postId/comments',async (req: RequestWithParamsWithQuery<CreateComentPostIdModel,QueryInputModalGetCommentsForCorrectPost>, res: Response)=>{
+
+
+    const sortData = {
+        pageNumber:  isNaN(Number(req.query.pageNumber))
+            ? 1
+            : Number(req.query.pageNumber),
+
+        pageSize: isNaN(Number(req.query.pageSize))
+            ? 10
+            : Number(req.query.pageSize),
+
+        sortBy: req.query.sortBy ?? 'createdAt',
+        sortDirection: req.query.sortDirection ?? 'desc',
+    }
+
+
+    try {
+
+        const comments = await commentsQueryRepository.getCommentsForCorrectPost(req.params.postId,sortData)
+
+        if(comments){
+            res.status(STATUS_CODE.SUCCESS_200).send(comments)
+        } else {
+            res.sendStatus(STATUS_CODE.NOT_FOUND_404)
+        }
+
+    }catch (error) {
+
+        console.log(' FIlE post-routes.ts get-/:postId/comments' + error)
     }
 
 

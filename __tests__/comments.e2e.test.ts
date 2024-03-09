@@ -34,7 +34,7 @@ describe('/comments',()=>{
     const passwordNewUser ='11111pasw'
     const emailNewUser ='palPel@mail.ru'
 
-    it('POST create newUsers',async ()=>{
+    it(' create newUsers',async ()=>{
         const res =await req
             .post('/users')
             .set('Authorization', `Basic ${loginPasswordBasic64}`)
@@ -75,7 +75,7 @@ let jwtToken=''
 
     let idNewPost:string
 
-    it('POST create newPost',async ()=>{
+    it(' create newPost',async ()=>{
         const res =await req
             .post('/posts')
             .set('Authorization', `Basic ${loginPasswordBasic64}`)
@@ -93,14 +93,78 @@ let jwtToken=''
     })
 
 
-    it("POST create newComment for exist  post",async ()=>{
+    it(" create newComment for exist  post",async ()=>{
         const res =await req
             .post(`/posts/${idNewPost}/comments`)
             .set('Authorization', `Bearer ${jwtToken}`)
             .send({content:'content for comments for post'})
             .expect(STATUS_CODE.CREATED_201)
-        console.log(res.body)
+        //console.log(res.body)
 
     })
+
+
+
+    it("  incorrect postId - create newComment for exist  post ",async ()=>{
+        const res =await req
+            .post(`/posts/65eb8c0c9d08ebe2496dcfd7/comments`)
+            .set('Authorization', `Bearer ${jwtToken}`)
+            .send({content:'content for comments for post'})
+            .expect(STATUS_CODE.NOT_FOUND_404)
+        //console.log(res.body)
+    })
+
+
+    it("  incorrect content - create newComment for exist  post ",async ()=>{
+        const res =await req
+            .post(`/posts/${idNewPost}/comments`)
+            .set('Authorization', `Bearer ${jwtToken}`)
+            .send({content:''})
+            .expect(STATUS_CODE.BAD_REQUEST_400)
+        //console.log(res.body)
+
+
+        expect(res.body).toEqual({  errorsMessages: [
+                { message: 'Incorrect content for comment', field: 'content' }]})
+    })
+
+
+
+    it("  incorrect jwtToken - create newComment for exist  post ",async ()=>{
+        const res =await req
+            .post(`/posts/${idNewPost}/comments`)
+            .set('Authorization', `Bearer 123`)
+            .send({content:'yttuyt fghg65 gjitytrfyt ty6565'})
+            .expect(STATUS_CODE.UNAUTHORIZED_401)
+        //console.log(res.body)
+    })
+
+
+    it(" create secondNewComment for exist  post",async ()=>{
+        const res =await req
+            .post(`/posts/${idNewPost}/comments`)
+            .set('Authorization', `Bearer ${jwtToken}`)
+            .send({content:'secondNewComment secondNewComment'})
+            .expect(STATUS_CODE.CREATED_201)
+        //console.log(res.body)
+
+    })
+
+
+
+    it(" get  all comment for exist  post",async ()=>{
+        const res =await req
+            .get(`/posts/${idNewPost}/comments`)
+            .expect(STATUS_CODE.SUCCESS_200)
+
+       // console.log(res.body.items)
+
+        expect(res.body.items.length).toEqual(2)
+
+    })
+
+
+
+
 
 })
