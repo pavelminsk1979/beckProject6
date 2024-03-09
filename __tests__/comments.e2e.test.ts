@@ -63,6 +63,40 @@ let jwtToken=''
     })
 
 
+    const loginSecondUser ='100100'
+    const passwordSecondUser ='55555pasw'
+    const emailSecondUser ='SecondUs@mail.ru'
+
+    it(' create secondUsers',async ()=>{
+        const res =await req
+            .post('/users')
+            .set('Authorization', `Basic ${loginPasswordBasic64}`)
+            .send({ login: loginSecondUser,
+                password: passwordSecondUser,
+                email:emailSecondUser})
+            .expect(STATUS_CODE.CREATED_201)
+
+        expect(res.body.login).toEqual(loginSecondUser)
+        expect(res.body.email).toEqual(emailSecondUser)
+    })
+
+
+
+    let jwtTokenSecond=''
+    it("input correct login and password and sign in (ok)",async ()=>{
+        const res =await req
+            .post('/auth/login')
+            .send({ loginOrEmail: loginSecondUser,
+                password: passwordSecondUser})
+            .expect(STATUS_CODE.SUCCESS_200)
+
+        // console.log(res.body.accessToken)
+        jwtTokenSecond=res.body.accessToken
+
+        expect(res.body.accessToken).toBeTruthy()
+    })
+
+
 
     it("me  request  (ok)",async ()=>{
         const res =await req
@@ -175,7 +209,7 @@ let commentId=''
 
 
 
-    it(" get   comment by idComment",async ()=>{
+    it(" get  comment by correct  idComment",async ()=>{
         const res =await req
             .get(`/comments/${commentId}`)
             .expect(STATUS_CODE.SUCCESS_200)
@@ -191,7 +225,7 @@ let commentId=''
 
     it(" incorrect idComment - get comment",async ()=>{
         await req
-            .get(`/comments/65ebb65294fd05d7b8c64395`)
+            .get(`/comments/6`)
             .expect(STATUS_CODE.NOT_FOUND_404)
     })
 
@@ -204,7 +238,23 @@ let commentId=''
             .set('Authorization', `Bearer ${jwtToken}`)
             .expect(STATUS_CODE.NO_CONTENT_204)
 
-        // console.log(res.body)
+    })
+
+
+    it("incorrect idComment - delete comment ",async ()=>{
+        const res =await req
+            .delete(`/comments/3`)
+            .set('Authorization', `Bearer ${jwtToken}`)
+            .expect(STATUS_CODE.NOT_FOUND_404)
+
+    })
+
+
+    it("jwtTokenSecond - delete comment inpossible because comment don't belong this user ",async ()=>{
+        const res =await req
+            .delete(`/comments/${commentId}`)
+            .set('Authorization', `Bearer ${jwtTokenSecond}`)
+            .expect(STATUS_CODE.FORBIDDEN_403)
 
     })
 

@@ -5,48 +5,54 @@ import {STATUS_CODE} from "../common/constant-status-code";
 import {IdCommentParam} from "../models/IdCommentParam";
 import {authTokenMiddleware} from "../middlewares/authMiddleware/authTokenMiddleware";
 import {commentsSevrice} from "../servisces/comments-service";
+import {postIdMiddleware} from "../middlewares/postsMiddlewares/postIdMiddleware";
+import {commentIdMiddleware} from "../middlewares/commentsMiddleware/commentIdMiddleware";
+import {ResultCode} from "../common/object-result";
 
 
-
-export const commentsRoute=Router({})
-
+export const commentsRoute = Router({})
 
 
-
-commentsRoute.get('/:commentId',async (req: RequestWithParams<IdCommentParam>, res: Response)=>{
+commentsRoute.get('/:commentId', commentIdMiddleware, async (req: RequestWithParams<IdCommentParam>, res: Response) => {
 
     try {
         const comment = await commentsQueryRepository.findCommentById(req.params.commentId)
 
-        if(comment){
-             res.status(STATUS_CODE.SUCCESS_200).send(comment)
+        if (comment) {
+            return res.status(STATUS_CODE.SUCCESS_200).send(comment)
         } else {
-            res.sendStatus(STATUS_CODE.NOT_FOUND_404)
+            return res.sendStatus(STATUS_CODE.NOT_FOUND_404)
         }
 
-    }catch (error) {
-       console.log(' FIlE comments-routes.ts get-/:commentId' + error)
-   }
+    } catch (error) {
+        console.log(' FIlE comments-routes.ts get-/:commentId' + error)
+        return res.sendStatus(STATUS_CODE.SERVER_ERROR_500)
+    }
 
 })
 
 
-
-
-commentsRoute.delete('/:commentId',authTokenMiddleware,async (req: RequestWithParams<IdCommentParam>, res: Response)=>{
+commentsRoute.delete('/:commentId', commentIdMiddleware, authTokenMiddleware, async (req: RequestWithParams<IdCommentParam>, res: Response) => {
 
     try {
 
-        const isCommentDelete = await commentsSevrice.deleteComentById(req.params.commentId)
+        const isCommentDelete = await commentsSevrice.deleteComentById(req.params.commentId, req.userIdLoginEmail.id)
 
-        if(isCommentDelete){
-            res.sendStatus(STATUS_CODE.NO_CONTENT_204)
+        if (isCommentDelete.code === ResultCode.Success) {
+            return res.sendStatus(STATUS_CODE.NO_CONTENT_204)
+        }
+        if (isCommentDelete.code === ResultCode.NotFound) {
+            return res.sendStatus(STATUS_CODE.NOT_FOUND_404)
+        }
+        if (isCommentDelete.code === ResultCode.Failure) {
+            return res.sendStatus(STATUS_CODE.FORBIDDEN_403)
         } else {
-            res.sendStatus(STATUS_CODE.NOT_FOUND_404)
+            return res.sendStatus(STATUS_CODE.NOT_FOUND_404)
         }
 
-    }catch (error) {
+    } catch (error) {
         console.log(' FIlE comments-routes.ts delete-/:commentId' + error)
+        return res.sendStatus(STATUS_CODE.SERVER_ERROR_500)
     }
 
 })

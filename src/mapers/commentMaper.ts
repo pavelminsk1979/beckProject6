@@ -1,4 +1,4 @@
-import {WithId} from "mongodb";
+
 import {OutputComment} from "../allTypes/commentTypes";
 
 
@@ -9,6 +9,10 @@ export const commentMaper = (comment:any):OutputComment => {
         id:comment._id.toString(),
         content: comment.content,
         createdAt: comment.createdAt,
-        commentatorInfo:comment.commentatorInfo
+        commentatorInfo: {
+            userId:comment.commentatorInfo.userId,
+            userLogin:comment.commentatorInfo.userLogin
+        }
+        //commentatorInfo:comment.commentatorInfo
     }
 }
