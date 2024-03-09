@@ -1,4 +1,4 @@
-import {body} from "express-validator";
+import {body,param} from "express-validator";
 import {blogQueryRepository} from "../../repositories/blog-query-repository";
 
 const findValue=async (value:string)=>{

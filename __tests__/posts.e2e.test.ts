@@ -151,7 +151,7 @@ describe('/posts',()=>{
     })
 
 
-    it('- PUT post by correct ID and incorrect data ', async () => {
+    it(' Incorrect data -create post by correct ID   ', async () => {
 
         const res=await req
             .put('/posts/'+idNewPost)

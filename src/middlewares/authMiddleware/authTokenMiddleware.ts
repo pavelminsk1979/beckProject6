@@ -1,4 +1,4 @@
-import {NextFunction, Request, Response} from "express";
+import {NextFunction, Response} from "express";
 import {STATUS_CODE} from "../../common/constant-status-code";
 import {tokenJwtServise} from "../../servisces/token-jwt-service";
 import {userQueryRepository} from "../../repositories/users/user-query-repository";

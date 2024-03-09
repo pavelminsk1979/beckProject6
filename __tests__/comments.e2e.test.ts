@@ -107,7 +107,7 @@ let jwtToken=''
 
     it("  incorrect postId - create newComment for exist  post ",async ()=>{
         const res =await req
-            .post(`/posts/65eb8c0c9d08ebe2496dcfd7/comments`)
+            .post(`/posts/1/comments`)
             .set('Authorization', `Bearer ${jwtToken}`)
             .send({content:'content for comments for post'})
             .expect(STATUS_CODE.NOT_FOUND_404)
@@ -166,6 +166,15 @@ let commentId=''
     })
 
 
+    it(" Incorrect PostId - get all comment ",async ()=>{
+        const res =await req
+            .get(`/posts/2/comments`)
+            .expect(STATUS_CODE.NOT_FOUND_404)
+    })
+
+
+
+
     it(" get   comment by idComment",async ()=>{
         const res =await req
             .get(`/comments/${commentId}`)
@@ -185,6 +194,8 @@ let commentId=''
             .get(`/comments/65ebb65294fd05d7b8c64395`)
             .expect(STATUS_CODE.NOT_FOUND_404)
     })
+
+
 
 
     it(" delete  comment by correct idComment",async ()=>{
