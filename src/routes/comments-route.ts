@@ -56,7 +56,7 @@ commentsRoute.delete('/:commentId', commentIdMiddleware, isExistCommentMiddlewar
 })
 
 
-commentsRoute.put('/:commentId',commentIdMiddleware,authTokenMiddleware,commentIsOwnMiddleware,contentValidationComments,errorValidationBlogs, async (req: RequestWithParamsWithBody<IdCommentParam,CreateComentBodyModel>, res: Response)=>{
+commentsRoute.put('/:commentId',commentIdMiddleware,isExistCommentMiddleware,authTokenMiddleware,commentIsOwnMiddleware,contentValidationComments,errorValidationBlogs, async (req: RequestWithParamsWithBody<IdCommentParam,CreateComentBodyModel>, res: Response)=>{
 
     try {
         const isUpdateComment = await commentsSevrice.updateComment(req.params.commentId,req.body.content)
