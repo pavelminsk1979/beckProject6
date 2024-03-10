@@ -11,6 +11,7 @@ import {RequestWithParamsWithBody} from "../allTypes/RequestWithParamsWithBody";
 import {CreateComentBodyModel} from "../models/CreateComentBodyModel";
 import {contentValidationComments} from "../middlewares/commentsMiddleware/contentValidationComments";
 import {errorValidationBlogs} from "../middlewares/blogsMiddelwares/errorValidationBlogs";
+import {isExistCommentMiddleware} from "../middlewares/commentsMiddleware/isExistCommentMiddleware";
 
 
 export const commentsRoute = Router({})
@@ -35,7 +36,7 @@ commentsRoute.get('/:commentId', commentIdMiddleware, async (req: RequestWithPar
 })
 
 
-commentsRoute.delete('/:commentId', commentIdMiddleware, authTokenMiddleware, commentIsOwnMiddleware, async (req: RequestWithParams<IdCommentParam>, res: Response) => {
+commentsRoute.delete('/:commentId', commentIdMiddleware, isExistCommentMiddleware, authTokenMiddleware, commentIsOwnMiddleware, async (req: RequestWithParams<IdCommentParam>, res: Response) => {
 
     try {
 
