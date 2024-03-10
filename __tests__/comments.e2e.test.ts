@@ -232,6 +232,29 @@ let commentId=''
 
 
 
+const updateContent = 'updateContent-updateContent'
+    it(" Update content for comment. All data correct",async ()=>{
+        await req
+            .put(`/comments/${commentId}`)
+            .set('Authorization', `Bearer ${jwtToken}`)
+            .send({content:updateContent})
+            .expect(STATUS_CODE.NO_CONTENT_204)
+
+        const getRes =await req
+            .get(`/comments/${commentId}`)
+            .expect(STATUS_CODE.SUCCESS_200)
+
+        //console.log(res.body)
+
+
+        expect(getRes.body.content).toEqual(updateContent)
+
+    })
+
+
+
+
+
     it(" delete  comment by correct idComment",async ()=>{
         const res =await req
             .delete(`/comments/${commentId}`)

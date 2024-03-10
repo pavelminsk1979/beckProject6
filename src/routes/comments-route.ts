@@ -5,9 +5,12 @@ import {STATUS_CODE} from "../common/constant-status-code";
 import {IdCommentParam} from "../models/IdCommentParam";
 import {authTokenMiddleware} from "../middlewares/authMiddleware/authTokenMiddleware";
 import {commentsSevrice} from "../servisces/comments-service";
-import {postIdMiddleware} from "../middlewares/postsMiddlewares/postIdMiddleware";
 import {commentIdMiddleware} from "../middlewares/commentsMiddleware/commentIdMiddleware";
-import {ResultCode} from "../common/object-result";
+import {commentIsOwnMiddleware} from "../middlewares/commentsMiddleware/commentIsOwnMiddleware";
+import {RequestWithParamsWithBody} from "../allTypes/RequestWithParamsWithBody";
+import {CreateComentBodyModel} from "../models/CreateComentBodyModel";
+import {contentValidationComments} from "../middlewares/commentsMiddleware/contentValidationComments";
+import {errorValidationBlogs} from "../middlewares/blogsMiddelwares/errorValidationBlogs";
 
 
 export const commentsRoute = Router({})
@@ -32,20 +35,14 @@ commentsRoute.get('/:commentId', commentIdMiddleware, async (req: RequestWithPar
 })
 
 
-commentsRoute.delete('/:commentId', commentIdMiddleware, authTokenMiddleware, async (req: RequestWithParams<IdCommentParam>, res: Response) => {
+commentsRoute.delete('/:commentId', commentIdMiddleware, authTokenMiddleware, commentIsOwnMiddleware, async (req: RequestWithParams<IdCommentParam>, res: Response) => {
 
     try {
 
-        const isCommentDelete = await commentsSevrice.deleteComentById(req.params.commentId, req.userIdLoginEmail.id)
+        const isCommentDelete = await commentsSevrice.deleteComentById(req.params.commentId)
 
-        if (isCommentDelete.code === ResultCode.Success) {
+        if(isCommentDelete){
             return res.sendStatus(STATUS_CODE.NO_CONTENT_204)
-        }
-        if (isCommentDelete.code === ResultCode.NotFound) {
-            return res.sendStatus(STATUS_CODE.NOT_FOUND_404)
-        }
-        if (isCommentDelete.code === ResultCode.Failure) {
-            return res.sendStatus(STATUS_CODE.FORBIDDEN_403)
         } else {
             return res.sendStatus(STATUS_CODE.NOT_FOUND_404)
         }
@@ -56,3 +53,34 @@ commentsRoute.delete('/:commentId', commentIdMiddleware, authTokenMiddleware, as
     }
 
 })
+
+
+commentsRoute.put('/:commentId',commentIdMiddleware,authTokenMiddleware,commentIsOwnMiddleware,contentValidationComments,errorValidationBlogs, async (req: RequestWithParamsWithBody<IdCommentParam,CreateComentBodyModel>, res: Response)=>{
+
+    try {
+        const isUpdateComment = await commentsSevrice.updateComment(req.params.commentId,req.body.content)
+
+        if(isUpdateComment){
+
+            return res.sendStatus(STATUS_CODE.NO_CONTENT_204)
+        }else {
+            return res.sendStatus(STATUS_CODE.NO_RESPONSE_444)
+        }
+
+    } catch (error) {
+
+        console.log(' FIlE comments-routes.ts put-/:commentId' + error)
+        return res.sendStatus(STATUS_CODE.SERVER_ERROR_500)
+    }
+
+
+
+})
+
+
+
+
+
+
+
+

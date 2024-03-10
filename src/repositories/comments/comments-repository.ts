@@ -1,7 +1,6 @@
 import {Comment} from "../../allTypes/commentTypes";
 import {commentsCollection} from "../../db/mongoDb";
 import {ObjectId} from "mongodb";
-import {ResultCode} from "../../common/object-result";
 
 export const commentsRepository = {
 
@@ -16,13 +15,17 @@ export const commentsRepository = {
 
         const result = await commentsCollection.deleteOne({_id:new ObjectId(id)})
 
-        const res = !!result.deletedCount
+        return !!result.deletedCount
 
-        if(res){
-            return {code:ResultCode.Success}
-        } else {
-            return {code:ResultCode.NotFound}
-        }
+    },
+
+    async updateComment(commentId:string,content:string){
+
+        const result = await commentsCollection.updateOne({_id: new ObjectId(commentId)},{
+            $set:{content}
+        })
+
+        return !!result.matchedCount
 
     }
 

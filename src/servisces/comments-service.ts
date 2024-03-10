@@ -1,19 +1,17 @@
 import {commentsRepository} from "../repositories/comments/comments-repository";
-import {commentsQueryRepository} from "../repositories/comments/comments-query-repository";
-import {ResultCode} from "../common/object-result";
+
 
 
 export const commentsSevrice = {
 
-    async deleteComentById(idComent:string,userId:string){
+    async deleteComentById(idComent:string){
 
-const comment = await commentsQueryRepository.findCommentById(idComent)
-        if(comment && userId===comment.commentatorInfo.userId) {
-            return commentsRepository.deleteComentById(idComent)
-        } else {
-            return {code:ResultCode.Failure}
-        }
+        return commentsRepository.deleteComentById(idComent)
+
+    },
 
 
+    async updateComment(commentId:string,content:string){
+        return commentsRepository.updateComment(commentId,content)
     }
 }
