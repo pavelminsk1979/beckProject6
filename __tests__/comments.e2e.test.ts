@@ -255,22 +255,27 @@ const updateContent = 'updateContent-updateContent'
 
 
 
-    it(" delete  comment by correct idComment",async ()=>{
+
+
+
+    it("inValid idComment - delete comment ",async ()=>{
         const res =await req
-            .delete(`/comments/${commentId}`)
-            .set('Authorization', `Bearer ${jwtToken}`)
-            .expect(STATUS_CODE.NO_CONTENT_204)
-
-    })
-
-
-    it("incorrect idComment - delete comment ",async ()=>{
-        const res =await req
-            .delete(`/comments/3`)
+            .delete(`/comments/6`)
             .set('Authorization', `Bearer ${jwtToken}`)
             .expect(STATUS_CODE.NOT_FOUND_404)
 
     })
+
+
+    it("Not exist  idComment - delete comment ",async ()=>{
+        const res =await req
+            .delete(`/comments/63189b06003380064c4193be`)
+            .set('Authorization', `Bearer ${jwtToken}`)
+            .expect(STATUS_CODE.NOT_FOUND_404)
+
+    })
+
+
 
 
     it("jwtTokenSecond - delete comment inpossible because comment don't belong this user ",async ()=>{
@@ -278,6 +283,16 @@ const updateContent = 'updateContent-updateContent'
             .delete(`/comments/${commentId}`)
             .set('Authorization', `Bearer ${jwtTokenSecond}`)
             .expect(STATUS_CODE.FORBIDDEN_403)
+
+    })
+
+
+
+    it(" delete  comment by correct idComment",async ()=>{
+        const res =await req
+            .delete(`/comments/${commentId}`)
+            .set('Authorization', `Bearer ${jwtToken}`)
+            .expect(STATUS_CODE.NO_CONTENT_204)
 
     })
 
